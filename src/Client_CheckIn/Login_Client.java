@@ -5,7 +5,6 @@
  */
 package Client_CheckIn;
 
-import applic_checkin.*;
 import ClassesCIA.Booking;
 import ClassesCIA.Voyageur;
 import ClassesCIA.Login;

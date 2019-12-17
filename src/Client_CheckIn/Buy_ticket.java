@@ -5,8 +5,6 @@
  */
 package Client_CheckIn;
 
-import applic_checkin.*;
-
 /**
  *
  * @author Dos Santos

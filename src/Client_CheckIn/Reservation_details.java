@@ -5,7 +5,6 @@
  */
 package Client_CheckIn;
 
-import applic_checkin.*;
 import ClassesCIA.Reservation;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import java.text.DateFormat;

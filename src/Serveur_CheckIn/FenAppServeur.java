@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applic_checkin;
+package Serveur_CheckIn;
 
-import applic_checkin.serveurpoolthreads.ListeTaches;
-import applic_checkin.serveurpoolthreads.ThreadServeur;
 import static divers.Config_Applic.pathConfig;
 import divers.Persistance_Properties;
 import java.io.IOException;
