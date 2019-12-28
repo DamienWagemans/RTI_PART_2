@@ -14,6 +14,7 @@ package divers;
     //ceci sera valable en fonctio de l'os utilisé grace aux "system.getProperty"
     
 
-    
+    public static String pathKEYstore_Serveur_Compagnie = (rep + sep + "file" + sep + "serveur_compagnie_keystore.properties");
+    public static String pathKEYstore_Serveur_carte = (rep + sep + "file" + sep + "serveur_carte_keystore.properties");
 
 }

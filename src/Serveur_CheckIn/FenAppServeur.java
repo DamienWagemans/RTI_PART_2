@@ -5,14 +5,22 @@
  */
 package Serveur_CheckIn;
 
+import divers.Config_Applic;
 import static divers.Config_Applic.pathConfig;
 import divers.Persistance_Properties;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLSocket;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,6 +38,8 @@ public class FenAppServeur extends javax.swing.JFrame {
     
     private int port_carte;
     private String ip_carte;
+    
+    public int SSL = 0;
     /**
      * Creates new form FenAppServeur
      */
@@ -52,6 +62,8 @@ public class FenAppServeur extends javax.swing.JFrame {
         
         ip_carte = myProperties.getProperty("ip_carte");
         port_carte = Integer.parseInt(myProperties.getProperty("port_carte"));
+        
+        SSL = Integer.parseInt(myProperties.getProperty("SSL"));
     }
 
     /**
@@ -210,13 +222,34 @@ public class FenAppServeur extends javax.swing.JFrame {
         System.out.println("serveur / Demarrage du serveur / main");
         Socket Sock;
         try {
-            //socket vers le serveur carte
-            Sock = new Socket(ip_carte, port_carte);
-            ts = new ThreadServeur(port, nbr_client, new ListeTaches(), Sock);
-            System.out.println("serveur / Connexion serveur carte / main");
+            //creation d'une socket securtisée
+            if(SSL == 1)
+            {
+                System.out.println("Mode SSL");
+                Properties key = Persistance_Properties.LoadProp(Config_Applic.pathKEYstore_Serveur_Compagnie);
+                SSLSocket sslsock= Security.SSL_facility.create_SSL_client_socket(key.getProperty("type_keystore"), key.getProperty("chemin_keystore"), key.getProperty("mdp_keystore"),key.getProperty("mdp_keystore"), port_carte, ip_carte);
+                ts = new ThreadServeur(port, nbr_client, new ListeTaches(), sslsock);
+            }
+            else
+            {
+                System.out.println("Mode Insecure");
+                Sock = new Socket(ip_carte, port_carte);
+                ts = new ThreadServeur(port, nbr_client, new ListeTaches(), Sock);
+            }
+            
             ts.start();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Connexion au serveur carte impossible", "Serveur carte erreur", JOptionPane.ERROR_MESSAGE);
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(FenAppServeur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(FenAppServeur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            Logger.getLogger(FenAppServeur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnrecoverableKeyException ex) {
+            Logger.getLogger(FenAppServeur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (KeyManagementException ex) {
+            Logger.getLogger(FenAppServeur.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_jButton_startActionPerformed
